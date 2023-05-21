@@ -2,7 +2,7 @@
   "name": "mm-cron",
   "version": "1.0.0",
   "description": "cron jobs within Nuxt 3",
-  "repository": "mediamaven/mmCron",
+  "repository": "TgMrP/mmCron",
   "license": "MIT",
   "type": "module",
   "exports": {
