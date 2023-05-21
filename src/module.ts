@@ -3,17 +3,17 @@ import {
   createResolver,
   addTemplate,
   useLogger,
-} from '@nuxt/kit';
-import defu from 'defu';
+} from "@nuxt/kit";
+import defu from "defu";
 
 export interface ModuleOptions {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'mm-cron',
-    configKey: 'mmCron',
+    name: "mm-cron",
+    configKey: "mmCron",
     compatibility: {
-      nuxt: '^3.4.0',
+      nuxt: "^3.4.0",
     },
   },
   defaults: {
@@ -23,35 +23,35 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url);
     const log = useLogger();
 
-    nuxt.hook('nitro:config', (nitroConfig) => {
+    nuxt.hook("nitro:config", (nitroConfig) => {
       nitroConfig.alias = nitroConfig.alias || {};
       nitroConfig.externals = defu(
-        typeof nitroConfig.externals === 'object' ? nitroConfig.externals : {},
+        typeof nitroConfig.externals === "object" ? nitroConfig.externals : {},
         {
-          inline: [resolve('./runtime')],
+          inline: [resolve("./runtime")],
         }
       );
-      nitroConfig.alias['#mmCron'] = resolve('./runtime');
+      nitroConfig.alias["#mmCron"] = resolve("./runtime");
 
-      log.info('mm-cron: nitro config updated');
+      log.info("mm-cron: nitro config updated");
     });
 
     addTemplate({
-      filename: 'types/mmCron.d.ts',
+      filename: "types/mmCron.d.ts",
       getContents: () =>
         [
           "declare module '#mmCron' {",
-          `  const useCron: typeof import('${resolve('./runtime')}').useCron`,
-          '}',
-        ].join('\n'),
+          `  const useCron: typeof import('${resolve("./runtime")}').useCron`,
+          "}",
+        ].join("\n"),
     });
 
-    nuxt.hook('prepare:types', (options) => {
+    nuxt.hook("prepare:types", (options) => {
       options.references.push({
-        path: resolve(nuxt.options.buildDir, 'types/mmCron.d.ts'),
+        path: resolve(nuxt.options.buildDir, "types/mmCron.d.ts"),
       });
 
-      log.info('mm-cron: types prepared');
+      log.info("mm-cron: types prepared");
     });
   },
 });
